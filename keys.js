@@ -13,8 +13,8 @@ module.exports = {
   	redirectUri : 'http://localhost:8888'
   },
 
-  myOMDBKey : {
-  	apikey : '867e0aa5',
+  OMDBKey : {
+  	apikey : '40e9cece',
   }
 
 }

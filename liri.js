@@ -1,198 +1,110 @@
+//create variable for argument
 
-var command = process.argv[2];
-var command2 = process.argv[3];
+var option = process.argv[2];
+var option1 = process.argv[3];
 
+//require keys
 
-//require keys file
 var keys = require('./keys');
-var fs = require('fs');
+
+// point var twitter to require twitter pkg
+var twitter = require('twitter');
+
+//set twitter keys int to twitter
+
+var Twitter = new twitter(keys.myTwitterKey);
+
+//if argument is 'my-tweets' - run myTweet function
+if (option === 'my-tweets') {
+	myTweet();
+}
+
+  switch (option) {
+  	  case "my-tweets":
+		      myTweet();
+           break;
+      case "movie-this":
+		      movieThis();
+           break;
+       case "withraw":
+       		 withraw();
+              
+             break;
+         default:
+         
+        console.log("missing amount");
+  } //swith closing
 
 
-if ( command === 'my-tweets') {
-	// npm install twitter first
-	var twitter = require('twitter');
 
-	//put my keys into twitter
-	var myTwitter = new twitter(keys.myTwitKey);
 
-	// search key word is my screen name and only display 20 tweets
-	var param = {
-	screen_name: 'mashipa1',
-	count: 20
-	}
 
-	myTwitter.get('statuses/user_timeline', param, showIt);
+// myTweet function to display screen name mashipa1
+function myTweet() {
 
-	function showIt (err, tweets, response) {
-		if ( err ) {
+// point var twitter to require twitter pkg
+var twitter = require('twitter');
+
+//set twitter keys int to twitter
+
+var Twitter = new twitter(keys.myTwitterKey);
+
+var param = {
+screen_name: 'mashipa1',
+count: 10
+
+}
+
+Twitter.get('statuses/user_timeline', param, function(err, tweets, response){
+if ( err ) {
         	console.log('Error occurred: ' + err);
         	return;
     	}
 		for (var i = 0 ; i< tweets.length; i++) {
 		console.log(tweets[i].text);
 		}
-	}
-} 
 
-else if ( command === 'spotify-this-song' ) {
 
-	var http = require("http");
-	
-	http.createServer(function(request, response) {
-  		response.writeHead(200, {"Content-Type": "text/plain"});
-  		response.write("/index", indext.html);
-  		response.end();
-	}).listen(8888);
+}); //closing request
 
-	var SpotifyWebApi = require('spotify-web-api-node');
-	
-	var spotifyApi = new SpotifyWebApi(keys.mySpotifyKey);
+}  //closing myTweet function
+//--------------------------
+//function to list movie information 
+//use omdbapi pkg
 
-	var scopes = ['playlist-read-private', 'playlist-read-collaborative', 'playlist-modify-public', 'user-library-read', 'user-read-private']
+function movieThis(){
 
-	var state = 'NJ';
+var request = require('request');
 
-	var authorizeURL = spotifyApi.createAuthorizeURL(scopes, state);
+console.log(movieName);
 
-	console.log(authorizeURL);
+//omdbapi api 
 
-	spotifyApi.searchTracks('Love').then(function(data) {
-    	console.log('Search by "Love"', data.body);
-  	}, function(err) {
-    console.error(err);
-  	});
+ var movieName = 'http://www.omdbapi.com/?i=tt3896198&apikey=' + keys.OMDBKey.apikey + '&t=' + option1;
 
-	console.log ("------------------------------------");
-
-	console.log("Spotify asks redirect URL to provide the authorization URL, and I dont have a redirect URL ... ");
-
-}
-
-else if (command === "movie-this") {
-
-	var request = require("request");
-
-	//substract "< >" from the search
-	var command2 = command2.substring(1, command2.length-1);
-
-	//repalce space with '+'
-	var movieKeyWords = command2.split(' ').join('+');
-	
-	var myMovie = 'http://www.omdbapi.com/?i=tt3896198&apikey=' + keys.myOMDBKey.apikey + '&t=' + movieKeyWords;
-
-	request (myMovie, function(err, res, body) {
+request (movieName, function(err, res, body) {
 		if ( err ) {
         	console.log('Error occurred: ' + err);
         	return;
     	}
-		//turn JSON data into string
+//turn JSON data into string
 		var myData = JSON.parse(body);
-		console.log (myData);
+		console.log("=======Movie info=========");
+		console.log(" ");
+		console.log("Title: " + myData.Title);
+		console.log("Year: " + myData.Year);
+		console.log("imdbRating: " + myData.imdbRating);
+		console.log("Country: " + myData.Country);
+		console.log("Language: " + myData.Language);
+		console.log("Plot: " + myData.Plot);
+		console.log("Actors: " + myData.Actors);
+		//console.log("Rotten: " + myData.Rotten);
+		console.log(" ");
+		console.log("==========================");
 
-	})	
-}
-
-else if (command === "do-what-it-says") {
-	fs.readFile ('./random.txt', 'utf-8', function(err, data){
-		if (err) throw err;
-
-		// turn data into an array
-		var myArr = data.split("\n");
-
-		command = myArr[0];
-		command2 = "<" + myArr[1] + ">";
-
-		console.log (command);
-		console.log (command2);
-
-		if ( command === 'my-tweets') {
-	// npm install twitter first
-	var twitter = require('twitter');
-
-	//put my keys into twitter
-	var myTwitter = new twitter(keys.myTwitKey);
-
-	// search key word is my screen name and only display 20 tweets
-	var param = {
-	screen_name: 'TEST_NODE_YX',
-	count: 20
-	}
-
-	myTwitter.get('statuses/user_timeline', param, showIt);
-
-	function showIt (err, tweets, response) {
-		if ( err ) {
-        	console.log('Error occurred: ' + err);
-        	return;
-    	}
-		for (var i = 0 ; i< tweets.length; i++) {
-		console.log(tweets[i].text);
-		}
-	}
-} 
-
-else if ( command === 'spotify-this-song' ) {
-
-	var http = require("http");
-	
-	http.createServer(function(request, response) {
-  		response.writeHead(200, {"Content-Type": "text/plain"});
-  		response.write("/index", indext.html);
-  		response.end();
-	}).listen(8888);
-
-	var SpotifyWebApi = require('spotify-web-api-node');
-	
-	var spotifyApi = new SpotifyWebApi(keys.mySpotifyKey);
-
-	var scopes = ['playlist-read-private', 'playlist-read-collaborative', 'playlist-modify-public', 'user-library-read', 'user-read-private']
-
-	var state = 'NJ';
-
-	var authorizeURL = spotifyApi.createAuthorizeURL(scopes, state);
-
-	console.log(authorizeURL);
-
-	spotifyApi.searchTracks('Love').then(function(data) {
-    	console.log('Search by "Love"', data.body);
-  	}, function(err) {
-    console.error(err);
-  	});
-
-	console.log ("------------------------------------");
-
-	console.log("Spotify asks redirect URL to provide the authorization URL, and I dont have a redirect URL ... ");
+	});
 
 }
 
-else if (command === "movie-this") {
 
-	var request = require("request");
-
-	//substract "< >" from the search
-	var command2 = command2.substring(1, command2.length-1);
-
-	//repalce space with '+'
-	var movieKeyWords = command2.split(' ').join('+');
-	
-	var myMovie = 'http://www.omdbapi.com/?i=tt3896198&apikey=' + keys.myOMDBKey.apikey + '&t=' + movieKeyWords;
-
-	request (myMovie, function(err, res, body) {
-		if ( err ) {
-        	console.log('Error occurred: ' + err);
-        	return;
-    	}
-		//turn JSON data into string
-		var myData = JSON.parse(body);
-		console.log (myData);
-
-	})	
-}
-
-
-	})
-
-	//console.log(inRandomFile);
-
-}
-
+      
