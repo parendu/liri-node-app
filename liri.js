@@ -5,49 +5,69 @@ var option1 = process.argv[3];
 
 //require keys
 
-var keys = require('./keys');
+var keys = require('./keys.js');
+var fs = require('fs');
 
 // point var twitter to require twitter pkg
 var twitter = require('twitter');
 
 //set twitter keys int to twitter
 
-var Twitter = new twitter(keys.myTwitterKey);
+var Twitter = new twitter(keys.TwitterKey);
+
+//require request
+var request = require('request');
+
+//soptify api keys
+ 
+  var spotifyWebApi = require('spotify-web-api-node');
+  var spotifyApi = new spotifyWebApi(keys.spotifyKey);
+
 
 //if argument is 'my-tweets' - run myTweet function
-if (option === 'my-tweets') {
-	myTweet();
-}
+
 
   switch (option) {
   	  case "my-tweets":
-		      myTweet();
+		      myTweet()
            break;
       case "movie-this":
-		      movieThis();
+         if (option1) {
+		      movieThis(option1);
+		  } else {
+		  	  movieThis("Mr. Nobody")
+		  }
            break;
-       case "withraw":
-       		 withraw();
-              
-             break;
+       case "spotify-this-song":
+       		 if (option1) {
+		      spotifyThisSong(option1)
+		  } else {
+		  	  movieThis("The Sign")
+		  }  
+            break;
+        case "do-what-it-says":
+          doWhatItSays()
+           break;
+
          default:
          
-        console.log("missing amount");
+        console.log("Please enter valid arguments - my-tweets, movie-this, spotify-this-song");
+  
   } //swith closing
 
 
 
-
+//-----------------MyTweet-------function
 
 // myTweet function to display screen name mashipa1
 function myTweet() {
 
 // point var twitter to require twitter pkg
-var twitter = require('twitter');
+//var twitter = require('twitter');
 
 //set twitter keys int to twitter
 
-var Twitter = new twitter(keys.myTwitterKey);
+//var Twitter = new twitter(keys.TwitterKey);
 
 var param = {
 screen_name: 'mashipa1',
@@ -61,6 +81,7 @@ if ( err ) {
         	return;
     	}
 		for (var i = 0 ; i< tweets.length; i++) {
+    console.log("======="+ [i] + "==========");
 		console.log(tweets[i].text);
 		}
 
@@ -72,11 +93,9 @@ if ( err ) {
 //function to list movie information 
 //use omdbapi pkg
 
-function movieThis(){
+function movieThis(option1){
 
-var request = require('request');
-
-console.log(movieName);
+//var request = require('request');
 
 //omdbapi api 
 
@@ -101,10 +120,83 @@ request (movieName, function(err, res, body) {
 		//console.log("Rotten: " + myData.Rotten);
 		console.log(" ");
 		console.log("==========================");
+		
+		// append output to log.txt
+        fs.appendFile('log.txt',"----------" + myData.Title + "---------")
+        fs.appendFile('log.txt', myData.Title);
+        fs.appendFile('log.txt', myData.Year);
+        fs.appendFile('log.txt', myData.imdbRating);
+        fs.appendFile('log.txt', myData.Country);
+		fs.appendFile('log.txt', myData.Language);
+        fs.appendFile('log.txt', myData.Plot);
+        fs.appendFile('log.txt', myData.Actors);
+        fs.appendFile('log.txt', "-----------------------------");       
 
 	});
 
 }
 
+//------------------movie-this--------------ends--
+//--------------spotify-this-song-------------start--
+
+
+function spotifyThisSong(option1){
+
+
+       		console.log("input song: " + option1);
+
+
+           spotifyApi.searchTracks(option1).then (function(data){
+               console.log("song info: " + data);
+            for(var i = 0; i < data.body.tracks.items.length; i++){
+                 var songInfo = data.body.tracks.items[i];
+                //artist
+                
+				//---------------Song artist, name, URL and Album-----
+				Console.log("====Song information - Artist, Name, Preview URL and Album====");
+                console.log(" ");
+                //Artist name
+                console.log("Artist: " + songInfo.artists[0].name);
+                //song name
+                console.log("Song: " + songInfo.name);
+                //spotify preview link
+                console.log("Preview URL: " + songInfo.preview_url);
+                //album name
+                console.log("Album: " + songInfo.album.name);
+                console.log(" ");
+                console.log("=====================================");
+
+                // append output to log.txt
+                fs.appendFile('log.txt',"----------" + song+ "---------")
+                fs.appendFile('log.txt', songInfo.artists[0].name);
+                fs.appendFile('log.txt', songInfo.name);
+                fs.appendFile('log.txt', songInfo.preview_url);
+                fs.appendFile('log.txt', songInfo.album.name);
+                fs.appendFile('log.txt', "-----------------------------");       
+               
+               //for loop closing
+
+          }  //for loop
+           });  //api closing
+   };   //function closing
+
+//--------------spotify-this-song-------------Ends--
+//---------------do-what-it-says---------------
+
+function doWhatItSays() {
+   fs.readFile('./random.txt', 'utf-8', function(err, data){
+
+     if (err) throw err;
+
+    // turn data into an array
+    var dataArr = data.split("\n");
+
+    option = dataArr[0];
+    option1 = dataArr[1];
 
       
+     
+
+     }); 
+
+}  //function closing
