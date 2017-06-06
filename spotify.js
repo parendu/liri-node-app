@@ -12,9 +12,9 @@
  */
 
   var SpotifyWebApi = require('spotify-web-api-node');
-
+  var request = require('request');
 // var spotifyApi = new spotifyWebApi(keys.SpotifyKey);
-
+   var access_token = "";
 
 var spotifyApi = new SpotifyWebApi({
   clientId : 'feceb5fb62fa4092a6373109c8231671',
@@ -29,6 +29,30 @@ spotifyApi.clientCredentialsGrant()
 
     // Save the access token so that it's used in future calls
     spotifyApi.setAccessToken(data.body['access_token']);
+    var access_token = data.body['access_token'];
+
+     console.log("hello: " +access_token);
+  
+  var options = {
+    url: 'https://api.spotify.com/v1/search?type=track&q=love&limit=20',
+    header: { 'Authorization': 'Bearer ' + BQAj0ovsSGQNx_wyza4mszSQgMPFaw7jdCmnp9dtdpzZNdCtzohqSvPVILJDd_aEEqJU_ImvCqKbGI7HeLwBaA' },
+    json: true
+  }
+
+
+    request(options, function(err, res, body) {
+    if ( err ) {
+          console.log('Error occurred: ' + err);
+          return;
+      }
+    //turn JSON data into string
+  //  var data = JSON.parse(body);
+    console.log(body);
+        
+        
+    });
+
+
   }, function(err) {
     console.log('Something went wrong when retrieving an access token', err.message);
   });
@@ -36,18 +60,23 @@ spotifyApi.clientCredentialsGrant()
 
 
 
-spotifyApi.searchTracks('Love', function(err, data) {
-  if (err) {
-    console.error('Something went wrong', err.message);
-    return;
-  }
+
+
+
+
+
+// spotifyApi.searchTracks('Love', function(err, data) {
+//   if (err) {
+//     console.error('Something went wrong', err.message);
+//     return;
+//   }
 
   // Print some information about the results
-  console.log('I got ' + data.body.tracks.total + ' results!');
+//  console.log('I got ' + data.body.tracks.total + ' results!');
 
   // Go through the first page of results
-  var firstPage = data.body.tracks.items;
-  console.log('The tracks in the first page are.. (popularity in parentheses)');
+  // var firstPage = data.body.tracks.items;
+  // console.log('The tracks in the first page are.. (popularity in parentheses)');
 
   /*
    * 0: All of Me (97)
@@ -55,7 +84,7 @@ spotifyApi.searchTracks('Love', function(err, data) {
    * 2: I Love This Life (78)
    * ...
    */
-  firstPage.forEach(function(track, index) {
-    console.log(index + ': ' + track.name + ' (' + track.popularity + ')');
-  });
-});
+//   firstPage.forEach(function(track, index) {
+//     console.log(index + ': ' + track.name + ' (' + track.popularity + ')');
+//   });
+// });

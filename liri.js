@@ -81,8 +81,9 @@ if ( err ) {
         	return;
     	}
 		for (var i = 0 ; i< tweets.length; i++) {
-    console.log("======="+ [i] + "==========");
-		console.log(tweets[i].text);
+    
+		
+    console.log(tweets[i].created_at+": "+tweets[i].text);
 		}
 
 
@@ -109,7 +110,9 @@ request (movieName, function(err, res, body) {
 //turn JSON data into string
 		var myData = JSON.parse(body);
 		console.log("=======Movie info=========");
-		console.log(" ");
+    console.log(" ");
+		console.log("command line request: "+process.argv);
+    console.log(" ");
 		console.log("Title: " + myData.Title);
 		console.log("Year: " + myData.Year);
 		console.log("imdbRating: " + myData.imdbRating);
@@ -122,7 +125,8 @@ request (movieName, function(err, res, body) {
 		console.log("==========================");
 		
 		// append output to log.txt
-        fs.appendFile('log.txt',"----------" + myData.Title + "---------")
+        fs.appendFile('log.txt',"command line request: "+process.argv);
+        fs.appendFile('log.txt',"----------" + myData.Title + "---------");
         fs.appendFile('log.txt', myData.Title);
         fs.appendFile('log.txt', myData.Year);
         fs.appendFile('log.txt', myData.imdbRating);
@@ -145,57 +149,79 @@ function spotifyThisSong(option1){
 
        		console.log("input song: " + option1);
 
+    var songName = 'https://api.spotify.com/v1/search?type=track&q=love&limit=20';
 
-           spotifyApi.searchTracks(option1).then (function(data){
-               console.log("song info: " + data);
-            for(var i = 0; i < data.body.tracks.items.length; i++){
-                 var songInfo = data.body.tracks.items[i];
-                //artist
+    request (songName, function(err, res, body) {
+    if ( err ) {
+          console.log('Error occurred: ' + err);
+          return;
+      }
+    //turn JSON data into string
+    var myData = JSON.parse(res.body);
+          
+// request(`https://api.spotify.com/v1/search?type=track&q=love&limit=20`, function (err, res) {
+
+          
+//           var json = JSON.parse(res.body);
+
+          // spotifyApi.searchTracks(option1).then (function(data){
+               console.log("song info: " + myData);
+
+});
+
+    //         for(var i = 0; i < data.body.tracks.items.length; i++){
+    //              var songInfo = data.body.tracks.items[i];
+    //             //artist
                 
-				//---------------Song artist, name, URL and Album-----
-				Console.log("====Song information - Artist, Name, Preview URL and Album====");
-                console.log(" ");
-                //Artist name
-                console.log("Artist: " + songInfo.artists[0].name);
-                //song name
-                console.log("Song: " + songInfo.name);
-                //spotify preview link
-                console.log("Preview URL: " + songInfo.preview_url);
-                //album name
-                console.log("Album: " + songInfo.album.name);
-                console.log(" ");
-                console.log("=====================================");
+				// //---------------Song artist, name, URL and Album-----
+				// Console.log("====Song information - Artist, Name, Preview URL and Album====");
+    //             console.log(" ");
+    //             //Artist name
+    //             console.log("Artist: " + songInfo.artists[0].name);
+    //             //song name
+    //             console.log("Song: " + songInfo.name);
+    //             //spotify preview link
+    //             console.log("Preview URL: " + songInfo.preview_url);
+    //             //album name
+    //             console.log("Album: " + songInfo.album.name);
+    //             console.log(" ");
+    //             console.log("=====================================");
 
-                // append output to log.txt
-                fs.appendFile('log.txt',"----------" + song+ "---------")
-                fs.appendFile('log.txt', songInfo.artists[0].name);
-                fs.appendFile('log.txt', songInfo.name);
-                fs.appendFile('log.txt', songInfo.preview_url);
-                fs.appendFile('log.txt', songInfo.album.name);
-                fs.appendFile('log.txt', "-----------------------------");       
+    //             // append output to log.txt
+    //             fs.appendFile('log.txt',"----------" + song+ "---------")
+    //             fs.appendFile('log.txt', songInfo.artists[0].name);
+    //             fs.appendFile('log.txt', songInfo.name);
+    //             fs.appendFile('log.txt', songInfo.preview_url);
+    //             fs.appendFile('log.txt', songInfo.album.name);
+    //             fs.appendFile('log.txt', "-----------------------------");       
                
-               //for loop closing
+    //            //for loop closing
 
-          }  //for loop
-           });  //api closing
+    //       }  //for loop
+          // });  //api closing
    };   //function closing
 
 //--------------spotify-this-song-------------Ends--
 //---------------do-what-it-says---------------
 
 function doWhatItSays() {
-   fs.readFile('./random.txt', 'utf-8', function(err, data){
-
-     if (err) throw err;
+ fs.readFile ('./random.txt', 'utf-8', function(err, data){
+    if (err) throw err;
 
     // turn data into an array
-    var dataArr = data.split("\n");
-
-    option = dataArr[0];
-    option1 = dataArr[1];
-
+    var myArr = data.split("\n");
       
-     
+    option = myArr[0];
+    option1 = myArr[1];
+
+      if (option === "movie-this\r"){
+       
+        movieThis(option1)
+       
+      }else{
+        console.log(option +" and "+ option1);
+      }
+
 
      }); 
 

@@ -8,9 +8,9 @@ module.exports = {
   },
 
   SpotifyKey : {
-  	clientId : '0474d77f3634471b9bbc1145a3bbd625',
-  	clientSecret : '8a267f6ff5234eb493138cbb99b2432e',
-  	redirectUri : 'http://localhost:8888'
+  	clientId : 'feceb5fb62fa4092a6373109c8231671',
+  	clientSecret : '0b0b9f3028344978a0c312317f4bc49e',
+  	redirectUri : 'http://localhost:8888/callback'
   },
 
   OMDBKey : {
