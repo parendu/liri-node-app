@@ -1,5 +1,5 @@
 # liri-node-app
-liri - 
+liri - Language Interpretation and Recognition Interface
 
 Getting Started
 
@@ -8,6 +8,11 @@ These instructions will get you a copy of the project up and running on your loc
 Prerequisites
 
 To run this application you will need Node.JS and NPM installed on your system.
+npm install twitter
+npm install fs
+npm install request
+npm install OMDBapi
+npm install node-spotify-api
 
 Installing
 
@@ -25,9 +30,10 @@ Search a song on Spotify: node liri spotify-this-song [song]
 
 Get information about a movie: node liri movie-this [movie]
 
-Run any commands you have run in the past: node liri do-what-it-says
+Get input from random.txt file : node liri do-what-it-says
 
-All commands are logged to the random.txt file.
+All commands and output are logged to the log.txt file.
+
 
 Built With
 
